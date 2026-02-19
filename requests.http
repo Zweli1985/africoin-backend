@@ -1,0 +1,216 @@
+# REST Client Test File (for VS Code REST Client extension)
+
+### Health Check
+GET http://localhost:3001/health
+
+### Register User
+POST http://localhost:3001/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "testuser@example.com",
+  "password": "SecurePass123!@",
+  "firstName": "Test",
+  "lastName": "User",
+  "phone": "+27123456789"
+}
+
+### Login
+POST http://localhost:3001/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "testuser@example.com",
+  "password": "SecurePass123!@"
+}
+
+### Verify Token
+POST http://localhost:3001/api/auth/verify
+Authorization: Bearer {{token}}
+
+### Change Password
+POST http://localhost:3001/api/auth/change-password
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "oldPassword": "SecurePass123!@",
+  "newPassword": "NewSecurePass123!@",
+  "confirmPassword": "NewSecurePass123!@"
+}
+
+### Get User Profile
+GET http://localhost:3001/api/user/profile
+Authorization: Bearer {{token}}
+
+### Update User Profile
+PUT http://localhost:3001/api/user/profile
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "firstName": "Updated",
+  "lastName": "Name",
+  "phone": "+27987654321",
+  "country": "ZA",
+  "city": "Cape Town",
+  "address": "123 Main St"
+}
+
+### Initiate KYC Verification
+POST http://localhost:3001/api/kyc/initiate
+Authorization: Bearer {{token}}
+
+### Check KYC Status
+GET http://localhost:3001/api/kyc/status
+Authorization: Bearer {{token}}
+
+### Submit KYC Documents
+POST http://localhost:3001/api/kyc/submit
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "documentType": "NATIONAL_ID",
+  "documentNumber": "1234567890",
+  "firstName": "Test",
+  "lastName": "User",
+  "dateOfBirth": "1990-01-15",
+  "idDocumentUrl": "https://example.com/id.jpg",
+  "proofOfAddressUrl": "https://example.com/proof.jpg"
+}
+
+### Create Stripe Payment Intent
+POST http://localhost:3001/api/payment/stripe/intent
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "amount": 100.00,
+  "currency": "ZAR"
+}
+
+### Confirm Stripe Payment
+POST http://localhost:3001/api/payment/stripe/confirm
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "transactionId": "{{transactionId}}",
+  "paymentIntentId": "{{paymentIntentId}}"
+}
+
+### Add Payment Method
+POST http://localhost:3001/api/payment/method
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "type": "CARD",
+  "cardToken": "tok_visa"
+}
+
+### Initiate PayFast Payment
+POST http://localhost:3001/api/payment/payfast/initiate
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "amount": 50.00,
+  "itemName": "AfriCoin Deposit",
+  "itemDescription": "Deposit funds to account"
+}
+
+### Get All Transactions
+GET http://localhost:3001/api/transaction
+Authorization: Bearer {{token}}
+
+### Get Transaction by ID
+GET http://localhost:3001/api/transaction/{{transactionId}}
+Authorization: Bearer {{token}}
+
+### Get Transaction Summary
+GET http://localhost:3001/api/transaction/summary/stats
+Authorization: Bearer {{token}}
+
+### Cancel Transaction
+POST http://localhost:3001/api/transaction/{{transactionId}}/cancel
+Authorization: Bearer {{token}}
+
+### Refund Transaction
+POST http://localhost:3001/api/payment/{{transactionId}}/refund
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "reason": "Customer request"
+}
+
+### Get Payment Methods
+GET http://localhost:3001/api/user/payment-methods
+Authorization: Bearer {{token}}
+
+### Delete Payment Method
+DELETE http://localhost:3001/api/user/payment-methods/{{paymentMethodId}}
+Authorization: Bearer {{token}}
+
+### Set Default Payment Method
+PATCH http://localhost:3001/api/user/payment-methods/{{paymentMethodId}}/default
+Authorization: Bearer {{token}}
+
+### Create Solana Wallet
+POST http://localhost:3001/api/solana/wallet/create
+Authorization: Bearer {{token}}
+
+### Get Solana Wallet Balance
+GET http://localhost:3001/api/solana/wallet/balance
+Authorization: Bearer {{token}}
+
+### Initiate Solana Transfer
+POST http://localhost:3001/api/solana/transfer/initiate
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "recipientAddress": "11111111111111111111111111111111",
+  "amount": 1.5,
+  "tokenMint": "EPjFWaLb3ufEKiaBNvv4Ufvj9CxyAz9m4zJWXamBWYh"
+}
+
+### Confirm Solana Transfer
+POST http://localhost:3001/api/solana/transfer/{{transactionId}}/confirm
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "transactionSignature": "5GQkSN8V5zqxF5E1p7gQQ7Z1vD2vQ3z5x8K2J9L4M6N8P0Q2R4S6T8U0V2W4X6Y8Z"
+}
+
+### Get Solana Transaction History
+GET http://localhost:3001/api/solana/transactions/history?limit=10
+Authorization: Bearer {{token}}
+
+### Get Solana Wallets
+GET http://localhost:3001/api/user/solana-wallets
+Authorization: Bearer {{token}}
+
+### Get Token Metadata
+GET http://localhost:3001/api/solana/token/EPjFWaLb3ufEKiaBNvv4Ufvj9CxyAz9m4zJWXamBWYh/metadata
+
+### Verify Wallet Ownership
+POST http://localhost:3001/api/solana/wallet/verify
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "publicKey": "11111111111111111111111111111111",
+  "signature": "base64encodedSignature"
+}
+
+### Enable 2FA
+POST http://localhost:3001/api/user/2fa/enable
+Authorization: Bearer {{token}}
+
+### Disable 2FA
+POST http://localhost:3001/api/user/2fa/disable
+Authorization: Bearer {{token}}

@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: africoin-db
+    environment:
+      POSTGRES_USER: africoin_user
+      POSTGRES_PASSWORD: africoin_password
+      POSTGRES_DB: africoin_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U africoin_user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: .
+    container_name: africoin-backend
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+      DATABASE_URL: postgresql://africoin_user:africoin_password@postgres:5432/africoin_db
+      JWT_SECRET: your-super-secret-jwt-key
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
+      PAYFAST_MERCHANT_ID: ${PAYFAST_MERCHANT_ID}
+      SOLANA_RPC_URL: https://api.devnet.solana.com
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./src:/app/src
+    command: npm run dev
+
+  adminer:
+    image: adminer
+    container_name: africoin-adminer
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+
+volumes:
+  postgres_data:
